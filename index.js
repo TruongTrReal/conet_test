@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const os = require('os');
 
 /**
  * Given a proxy string like "nhjg97q5:UrF1hhOjAD9v@103.139.124.45:26415",
@@ -114,7 +115,15 @@ async function runAutomation(proxy) {
   let options = new chrome.Options();
   options.addArguments(`--load-extension=${extPath}`);
   options.addArguments('start-maximized');
-  // You can add more options (e.g., headless mode) if desired
+
+  const args = [];
+
+  if (os.platform() === 'linux') {
+    args.push('--headless', '--no-sandbox', '--disable-gpu');
+    options.setChromeBinaryPath('/usr/bin/chromium-browser');
+  }
+
+  options.addArguments(args);
 
   // Build the driver with Chrome
   let driver = await new Builder()
