@@ -106,14 +106,17 @@ async function runAutomation(proxy) {
   }
   const [proxyUsername, proxyPassword] = authPart.split(':');
   const [host, port] = serverPart.split(':');
+  const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
 
   // Set up Chrome options.
   let options = new chrome.Options();
   // Remove the simple --proxy-server flag; we will load an extension to handle both the proxy server and auth.
   // options.addArguments(`--proxy-server=http://${host}:${port}`);
   options.addArguments('start-maximized');
-
-  // On Linux, adjust headless settings or the Chrome binary path if needed.
+  options.addArguments(`--user-agent=${USER_AGENT}`);
+  options.addArguments("--disable-web-security")
+  // options.addArguments("--disable-site-isolation-trials")
+  // options.addArguments("--allow-running-insecure-content")
   const args = [];
   if (os.platform() === 'linux') {
     // Uncomment the following line if you wish to run in headless mode.
